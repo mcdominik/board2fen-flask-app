@@ -131,4 +131,4 @@ def get_full_fen():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(port=80)
