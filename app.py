@@ -25,14 +25,10 @@ class UploadFrom(FlaskForm):
     )
     submit = SubmitField('Get FEN')
 
-
 @app.route('/uploads/<filename>')
 def get_file(filename):
     return send_from_directory(app.config['UPLOADED_PHOTOS_DEST'], filename)
 
-
-next_move = ''
-can_castle =''
 @app.route('/', methods=['GET','POST'])
 def get_fen():
     for file in os.listdir('uploads'):
@@ -41,7 +37,6 @@ def get_fen():
     fen = ''
     if form.is_submitted():
         filename = photos.save(request.files["photo"], name=f'{str(randint(0,1000000))}.png')
-        print(filename)
         file_url = url_for('get_file', filename=filename)
         path = f'./uploads/{filename}'
         fen = get_fen_from_image(path)
@@ -53,30 +48,24 @@ def get_fen():
 
 @app.route('/full', methods=['GET','POST'])
 def get_full_fen():
+    for file in os.listdir('uploads'):
+        os.remove(f'uploads/{file}') 
     form = UploadFrom()
-    # print(f'photos path: {photos.path}')
-    # # print(f'moj log: {photos.save(request.files["photo"])}')
-    # filename = photos.save(request.files["photo"])
-    # print(f'filename: {filename}')
-
-
-    #     # filename = photos.save(form.photo.data)
-    # file_url = url_for('get_file', filename=filename)
-    # print(f'file url to: {file_url}')
-    # return render_template('index.html', form=form, file_url=file_url)
     fen = ''
     if form.is_submitted():
-        filename = photos.save(request.files["photo"])
-
-        # filename = photos.save(form.photo.data)
+        filename = photos.save(request.files["photo"], name=f'{str(randint(0,1000000))}.png')
         file_url = url_for('get_file', filename=filename)
         path = f'./uploads/{filename}'
         fen = get_fen_from_image(path)
         print(f'fen: {fen}')
     else:
         file_url = None
-    
+    full_fen = squeeze_front_data(fen)
+    return render_template('full.html', form=form, file_url=file_url, fen=full_fen)
 
+def squeeze_front_data(fen):
+    can_castle = ''
+    next_move = ''
     next_move_white = request.form.get("next-move-white", False)
     next_move_black = request.form.get("next-move-black", False)
     castle_white_short = request.form.get("castle-white-short", False)
@@ -86,49 +75,37 @@ def get_full_fen():
     full_move_number = request.form.get("full-move-number", False)
     half_move_number = request.form.get("half-move-number", False)
     en_passant = request.form.get("en-passant", False)
-    global next_move
     if next_move_white == '' and next_move_black == False:
         next_move = 'w'
     if next_move_black == '' and next_move_white == False:
         next_move = 'b'
-
-    global can_castle
+    else:
+        next_move = '?'
     if castle_white_short == '':
         can_castle+='K'
-    if castle_white_short == False:
+    else:
         can_castle+='-'
     if castle_white_long == '':
         can_castle+='Q'
-    if castle_white_long == False:
+    else:
         can_castle+='-'
     if castle_black_short == '':
         can_castle+='k'
-    if castle_black_short == False:
+    else:
         can_castle+='-'
     if castle_black_long == '':
         can_castle+='q'
-    if castle_black_long == False:
+    else:
         can_castle+='-'
-
     if en_passant == '':
         en_passant+='-'
-    fen = f'{fen} {next_move} {can_castle} {en_passant} {half_move_number} {full_move_number}'
-    print(fen)
-
-    # next_w = request.form['next-move-white']
-    print(f'en pass:{en_passant}')
-    print(f'next black:{next_move_black}')
-    print(f'next white:{next_move_white}')
-    print(f'castle white L:{castle_white_short}')
-    print(f'castle white S:{castle_white_long}')
-    print(f'castle black L:{castle_black_short}')
-    print(f'castle black S:{castle_black_long}')
-    print(f'half move:{half_move_number}')
-    print(f'full move:{full_move_number}')
-
-    # print(f'next w:{next_w}')
-    return render_template('full.html', form=form, file_url=file_url, fen=fen)
-
+    if half_move_number == '':
+        half_move_number = '?'
+    if full_move_number == '':
+        full_move_number = '?'   
+    full_fen = f'{fen} {next_move} {can_castle} {en_passant} {half_move_number} {full_move_number}'
+    return full_fen
+  
 
 if __name__ == '__main__':
-    app.run(port=80)
+    app.run(debug=True)
