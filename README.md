@@ -2,4 +2,4 @@
 
 Available at: 
 
-srv16.mikr.us:20231
+http://srv16.mikr.us:20231
