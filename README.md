@@ -1,5 +1,8 @@
 # board2fen-flask-app
 
+
+simple Flask application, enable web usage of package board_to_fen package [https://github.com/mcdominik/board_to_fen]
+
 Available at: 
 
 http://srv16.mikr.us:20231
