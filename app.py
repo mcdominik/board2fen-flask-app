@@ -7,6 +7,7 @@ from board_to_fen.predict import get_fen_from_image
 import secrets
 import os
 from random import randint
+import pathlib
 
 
 app = Flask(__name__)
@@ -19,7 +20,7 @@ configure_uploads(app, photos)
 class UploadFrom(FlaskForm):
     photo = FileField(
         validators=[
-            FileAllowed(photos,'only images are allowed'),
+            FileAllowed(photos, 'only images are allowed'),
             FileRequired('file field should not be empty')  ,
         ],    
     )
@@ -39,8 +40,12 @@ def get_fen():
         filename = photos.save(request.files["photo"], name=f'{str(randint(0,1000000))}.png')
         file_url = url_for('get_file', filename=filename)
         path = f'./uploads/{filename}'
-        fen = get_fen_from_image(path)
-        print(f'fen: {fen}')
+        if request.form.get("invert", False) == 'on':
+            fen = get_fen_from_image(path, black_view=True)
+            print(f'fen [black view]: {fen}')     
+        else:
+            fen = get_fen_from_image(path)
+            print(f'fen: {fen}')
     else:
         file_url = None  
     return render_template('index.html', form=form, file_url=file_url, fen=fen)
@@ -77,7 +82,7 @@ def squeeze_front_data(fen):
     en_passant = request.form.get("en-passant", False)
     if next_move_white == '' and next_move_black == False:
         next_move = 'w'
-    if next_move_black == '' and next_move_white == False:
+    elif next_move_black == '' and next_move_white == False:
         next_move = 'b'
     else:
         next_move = '?'
@@ -108,4 +113,6 @@ def squeeze_front_data(fen):
   
 
 if __name__ == '__main__':
+    pathlib.Path('uploads').mkdir(exist_ok=True) 
     app.run(debug=True)
+
