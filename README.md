@@ -9,4 +9,4 @@ http://srv16.mikr.us:20231
 
 or https (temporary may not work):
 
-https://board2fen.toadres.pl
+https://board2fen.bieda.it
