@@ -5,8 +5,10 @@ simple Flask application, enables web usage of package board_to_fen package [htt
 
 Available at: 
 
+https://board2fen.bieda.it
+
+
+or http (not recommended, only if the first one doesn't work):
+
 http://srv16.mikr.us:20231
 
-or https (temporary may not work):
-
-https://board2fen.bieda.it
