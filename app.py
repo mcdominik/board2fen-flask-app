@@ -3,7 +3,7 @@ from flask_wtf import FlaskForm
 from flask_wtf.file import FileAllowed, FileField, FileRequired
 from flask_uploads import UploadSet, IMAGES, configure_uploads 
 from wtforms import SubmitField
-from board_to_fen.predict import get_fen_from_image
+from board_to_fen.predict import get_fen_from_image_path
 import secrets
 import os
 from random import randint
@@ -41,10 +41,10 @@ def get_fen():
         file_url = url_for('get_file', filename=filename)
         path = f'./uploads/{filename}'
         if request.form.get("invert", False) == 'on':
-            fen = get_fen_from_image(path, black_view=True)
+            fen = get_fen_from_image_path(path, black_view=True)
             print(f'fen [black view]: {fen}')     
         else:
-            fen = get_fen_from_image(path)
+            fen = get_fen_from_image_path(path)
             print(f'fen: {fen}')
     else:
         file_url = None  
@@ -61,7 +61,7 @@ def get_full_fen():
         filename = photos.save(request.files["photo"], name=f'{str(randint(0,1000000))}.png')
         file_url = url_for('get_file', filename=filename)
         path = f'./uploads/{filename}'
-        fen = get_fen_from_image(path)
+        fen = get_fen_from_image_path(path)
         print(f'fen: {fen}')
     else:
         file_url = None
@@ -114,9 +114,9 @@ def squeeze_front_data(fen):
 
 if __name__ == '__main__':
     pathlib.Path('uploads').mkdir(exist_ok=True) 
-    #run production
-    app.run(host='::',port=2137)
+    # run production
+    # app.run(host='::',port=2137)
 
     #run development
-    # app.run(debug=True)
+    app.run(debug=True)
 
