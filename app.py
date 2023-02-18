@@ -115,8 +115,8 @@ def squeeze_front_data(fen):
 if __name__ == '__main__':
     pathlib.Path('uploads').mkdir(exist_ok=True) 
     # run production
-    # app.run(host='::',port=2137)
+    app.run(host='::',port=2137)
 
     #run development
-    app.run(debug=True)
+    # app.run(debug=True)
 
