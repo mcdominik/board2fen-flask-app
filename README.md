@@ -4,16 +4,17 @@
 Simple Flask application, enables web usage of package board_to_fen package [https://github.com/mcdominik/board_to_fen]
 Forsyth–Edwards Notation explained: https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation
 
-## Available at
+#Available at
 
-https://board2fen.bieda.it
+# https://board2fen.bieda.it
 
 <img width="1512" alt="Screenshot 2023-01-05 at 16 46 44" src="https://user-images.githubusercontent.com/81818614/210822074-38586ea4-a1b9-4af0-864c-6fd315e1b62b.png">
 
 
-or http (not recommended, only if the first one doesn't work):
-
-http://srv16.mikr.us:20231
+# or docker image:
+```
+docker pull mcdominik/board2fen_cpu
+```
 
 ## How to use it
 
